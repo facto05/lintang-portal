@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <defs>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#991B1B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="120" fill="#ffffff" rx="8"/>
+  <!-- Shield Icon -->
+  <g transform="translate(20, 15)">
+    <path d="M45 0 L90 20 L90 55 Q90 90 45 110 Q0 90 0 55 L0 20 Z" fill="url(#redGrad)"/>
+    <text x="45" y="45" font-family="Georgia, serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">L</text>
+    <text x="45" y="72" font-family="Georgia, serif" font-size="11" fill="white" text-anchor="middle" opacity="0.9">LIN</text>
+    <!-- Stars -->
+    <circle cx="25" cy="28" r="3" fill="white" opacity="0.8"/>
+    <circle cx="45" cy="22" r="3" fill="white"/>
+    <circle cx="65" cy="28" r="3" fill="white" opacity="0.8"/>
+  </g>
+  <!-- Text -->
+  <text x="130" y="42" font-family="Georgia, serif" font-size="28" font-weight="bold" fill="#991B1B">LINTANG</text>
+  <text x="130" y="65" font-family="Arial, sans-serif" font-size="13" fill="#374151" letter-spacing="1">LEMBAGA INVESTIGASI NEGARA</text>
+  <text x="130" y="88" font-family="Arial, sans-serif" font-size="12" fill="#6B7280" letter-spacing="2">KOTA TANGERANG</text>
+</svg>

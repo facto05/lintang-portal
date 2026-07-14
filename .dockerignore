@@ -1,0 +1,14 @@
+.git
+.env
+.env.*
+node_modules
+vendor
+storage/logs/*
+storage/framework/cache/*
+bootstrap/cache/*.php
+storage/app/public/media/*
+storage/app/public/posts/*
+*.md
+tests
+.github
+.vscode
