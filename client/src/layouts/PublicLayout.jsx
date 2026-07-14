@@ -21,7 +21,7 @@ export default function PublicLayout() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <div className="bg-red-700 text-white py-1">
+      <div className="bg-black text-white py-1">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center text-xs">
           <span>Lembaga Investigasi Negara Kota Tangerang</span>
           <span>{new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
@@ -32,11 +32,11 @@ export default function PublicLayout() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-red-700 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-lg">L</span>
               </div>
               <div>
-                <div className="text-xl font-bold text-red-700">LINTANG</div>
+                <div className="text-xl font-bold text-black">LINTANG</div>
                 <div className="text-xs text-gray-600">Kota Tangerang</div>
               </div>
             </Link>
@@ -55,8 +55,8 @@ export default function PublicLayout() {
                 <Link key={item.path} to={item.path}
                   className={`py-4 border-b-2 transition ${
                     isActive(item.path)
-                      ? 'border-red-700 text-red-700 font-medium'
-                      : 'border-transparent hover:border-red-700 hover:text-red-700 text-gray-700'
+                      ? 'border-black text-black font-medium'
+                      : 'border-transparent hover:border-black hover:text-black text-gray-700'
                   }`}>
                   {item.label}
                 </Link>
@@ -68,7 +68,7 @@ export default function PublicLayout() {
               {navItems.map(item => (
                 <Link key={item.path} to={item.path} onClick={() => setMenuOpen(false)}
                   className={`block px-4 py-2 rounded text-sm ${
-                    isActive(item.path) ? 'bg-red-50 text-red-700 font-medium' : 'text-gray-700 hover:bg-gray-50'
+                    isActive(item.path) ? 'bg-gray-50 text-black font-medium' : 'text-gray-700 hover:bg-gray-50'
                   }`}>
                   {item.label}
                 </Link>
@@ -85,7 +85,7 @@ export default function PublicLayout() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-2">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-red-700 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
                   <span className="text-white font-bold text-lg">L</span>
                 </div>
                 <div>
@@ -101,7 +101,7 @@ export default function PublicLayout() {
               <h3 className="text-lg font-bold mb-4">Halaman</h3>
               <ul className="space-y-2 text-sm text-gray-300">
                 {navItems.filter(i => i.path !== '/').map(item => (
-                  <li key={item.path}><Link to={item.path} className="hover:text-red-500">{item.label}</Link></li>
+                  <li key={item.path}><Link to={item.path} className="hover:text-gray-500">{item.label}</Link></li>
                 ))}
               </ul>
             </div>

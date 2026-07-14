@@ -10,6 +10,8 @@ const navItems = [
   { path: '/admin/users', label: 'Users', icon: '👥' },
 ];
 
+// ponytail: media library removed — image upload lives inside Posts
+
 export default function AdminLayout({ children }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -22,7 +24,7 @@ export default function AdminLayout({ children }) {
       <aside className="w-64 bg-gray-900 text-white flex-shrink-0">
         <div className="p-4 border-b border-gray-800">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-red-700 rounded flex items-center justify-center">
+            <div className="w-8 h-8 bg-black rounded flex items-center justify-center">
               <span className="text-white font-bold">L</span>
             </div>
             <span className="font-bold">LINTANG Admin</span>
@@ -32,7 +34,7 @@ export default function AdminLayout({ children }) {
           {navItems.map(item => (
             <Link key={item.path} to={item.path}
               className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-sm transition ${
-                location.pathname.startsWith(item.path) ? 'bg-red-700 text-white' : 'text-gray-300 hover:bg-gray-800'
+                location.pathname.startsWith(item.path) ? 'bg-black text-white' : 'text-gray-300 hover:bg-gray-800'
               }`}>
               <span>{item.icon}</span>
               <span>{item.label}</span>
@@ -43,7 +45,7 @@ export default function AdminLayout({ children }) {
       <div className="flex-1 flex flex-col">
         <header className="bg-white border-b h-16 flex items-center justify-between px-6">
           <span className="text-sm text-gray-500">Selamat datang, {user?.name}</span>
-          <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-red-700">Logout</button>
+          <button onClick={handleLogout} className="text-sm text-gray-500 hover:text-black">Logout</button>
         </header>
         <main className="flex-1 p-6">{children}</main>
       </div>

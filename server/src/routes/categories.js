@@ -1,6 +1,12 @@
 import { Router } from 'express';
-import { getDb } from '../utils/database.js';
+import { getDb, saveDb } from '../utils/database.js';
+import { authMiddleware } from '../utils/middleware.js';
+
 const router = Router();
+
+function slugify(text) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
 
 router.get('/', (req, res) => {
   try {
@@ -32,8 +38,11 @@ router.get('/:slug', (req, res) => {
     const limit = 12;
     const offset = (page - 1) * limit;
 
-    const countResult = db.exec(`SELECT COUNT(*) FROM posts WHERE category_id = ${category.id} AND status = 'published'`);
-    const total = countResult[0]?.values[0][0] || 0;
+    const countResult = db.prepare(`SELECT COUNT(*) as cnt FROM posts WHERE category_id = ? AND status = 'published'`);
+    countResult.bind([category.id]);
+    countResult.step();
+    const total = countResult.getAsObject().cnt || 0;
+    countResult.free();
 
     const stmt = db.prepare(`
       SELECT p.*, u.name as author_name FROM posts p
@@ -49,6 +58,46 @@ router.get('/:slug', (req, res) => {
     res.json({ category, posts, total, page, totalPages: Math.ceil(total / limit) });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+router.post('/', authMiddleware(['admin']), (req, res) => {
+  try {
+    const { name, slug, type, description } = req.body;
+    if (!name) return res.status(400).json({ message: 'Name is required' });
+    const db = getDb();
+    db.run('INSERT INTO categories (name, slug, type, description) VALUES (?, ?, ?, ?)',
+      [name, slug || slugify(name), type || 'general', description || null]);
+    const idResult = db.exec("SELECT last_insert_rowid()");
+    const id = idResult[0]?.values[0][0];
+    saveDb();
+    res.status(201).json({ message: 'Category created', id });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+router.put('/:id', authMiddleware(['admin']), (req, res) => {
+  try {
+    const { name, slug, type, description } = req.body;
+    const db = getDb();
+    db.run('UPDATE categories SET name = COALESCE(?, name), slug = COALESCE(?, slug), type = COALESCE(?, type), description = COALESCE(?, description) WHERE id = ?',
+      [name || null, slug || null, type || null, description || null, req.params.id]);
+    saveDb();
+    res.json({ message: 'Category updated' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+router.delete('/:id', authMiddleware(['admin']), (req, res) => {
+  try {
+    const db = getDb();
+    db.run('DELETE FROM categories WHERE id = ?', [req.params.id]);
+    saveDb();
+    res.json({ message: 'Category deleted' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 

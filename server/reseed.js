@@ -18,11 +18,12 @@ initSqlJs().then(SQL => {
   db.run('DELETE FROM categories');
   db.run('DELETE FROM users');
   db.run('DELETE FROM pages');
+  db.run("DELETE FROM sqlite_sequence");
 
   // Users
   const hash = bcrypt.hashSync('password', 10);
-  db.run('INSERT INTO users (name, email, password, role, department) VALUES (?,?,?,?,?)', ['Admin LINTANG', 'admin@lintang.tangerangkota.go.id', hash, 'admin', 'Humas']);
-  db.run('INSERT INTO users (name, email, password, role, department) VALUES (?,?,?,?,?)', ['Editor LINTANG', 'editor@lintang.tangerangkota.go.id', hash, 'editor', 'Investigasi']);
+  db.run('INSERT INTO users (name, username, email, password, role, department) VALUES (?,?,?,?,?,?)', ['Admin LINTANG', 'admin', 'admin@lintang.tangerangkota.go.id', hash, 'admin', 'Humas']);
+  db.run('INSERT INTO users (name, username, email, password, role, department) VALUES (?,?,?,?,?,?)', ['Editor LINTANG', 'editor', 'editor@lintang.tangerangkota.go.id', hash, 'editor', 'Investigasi']);
 
   // Categories
   const insertCat = db.prepare('INSERT INTO categories (name, slug, type, description, is_featured) VALUES (?,?,?,?,?)');
@@ -61,6 +62,17 @@ initSqlJs().then(SQL => {
   insertTag.run(['Investigasi', 'investigasi', 'topic']);
   insertTag.run(['Laporan', 'laporan', 'topic']);
   insertTag.run(['Transparansi', 'transparansi', 'topic']);
+
+  // Link tags to posts
+  const insertPostTag = db.prepare('INSERT OR IGNORE INTO post_tag (post_id, tag_id) VALUES (?,?)');
+  const allTags = db.exec('SELECT id FROM tags');
+  const tagIds = allTags[0]?.values.map(r => r[0]) || [];
+  const allPosts = db.exec('SELECT id FROM posts');
+  const postIds = allPosts[0]?.values.map(r => r[0]) || [];
+  postIds.forEach((pid, i) => {
+    insertPostTag.run([pid, tagIds[i % tagIds.length]]);
+    if (i + 1 < tagIds.length) insertPostTag.run([pid, tagIds[(i + 1) % tagIds.length]]);
+  });
 
   // Pages
   const insertPage = db.prepare('INSERT INTO pages (title, slug, page_type, content, meta_title, meta_description, is_active) VALUES (?,?,?,?,?,?,?)');

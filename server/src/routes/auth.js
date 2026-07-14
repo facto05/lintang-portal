@@ -7,10 +7,22 @@ const router = Router();
 
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
+  const isEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+  let query = 'SELECT * FROM users WHERE ';
+  let params = [];
+
+  if (isEmail) {
+    query += 'email = ?';
+    params.push(email);
+  } else {
+    query += 'username = ?';
+    params.push(email);
+  }
+
   try {
     const db = getDb();
-    const stmt = db.prepare('SELECT * FROM users WHERE email = ?');
-    stmt.bind([email]);
+    const stmt = db.prepare(query);
+    stmt.bind(params);
     if (!stmt.step()) {
       stmt.free();
       return res.status(401).json({ message: 'Email atau password salah' });

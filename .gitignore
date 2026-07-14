@@ -1,5 +1,9 @@
 node_modules
 dist
 data/lintang.db
+server/data/lintang.db
+server/uploads/*
+!server/uploads/.gitkeep
 .env
+server/.env
 .DS_Store

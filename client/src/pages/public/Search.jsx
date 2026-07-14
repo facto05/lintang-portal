@@ -28,9 +28,9 @@ export default function Search() {
 
   return (
     <div>
-      <div className="bg-red-700 text-white py-8">
+      <div className="bg-black text-white py-8">
         <nav className="max-w-7xl mx-auto px-4 mb-4">
-          <div className="flex items-center space-x-2 text-sm text-red-200">
+          <div className="flex items-center space-x-2 text-sm text-gray-200">
             <Link to="/" className="hover:text-white">Beranda</Link>
             <span>/</span>
             <span>Pencarian</span>
@@ -38,7 +38,7 @@ export default function Search() {
         </nav>
         <div className="max-w-7xl mx-auto px-4">
           <h1 className="text-3xl font-bold">Pencarian</h1>
-          <p className="mt-2 text-red-100">Temukan berita yang Anda cari</p>
+          <p className="mt-2 text-gray-100">Temukan berita yang Anda cari</p>
         </div>
       </div>
 
@@ -46,8 +46,8 @@ export default function Search() {
         <form onSubmit={handleSearch} className="bg-white rounded-lg shadow p-6 mb-8">
           <div className="flex gap-4">
             <input type="text" name="q" defaultValue={q} placeholder="Masukkan kata kunci..."
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:ring-red-500 focus:border-red-500" />
-            <button type="submit" className="bg-red-700 text-white px-8 py-3 rounded-lg hover:bg-red-800 transition font-medium">Cari</button>
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:ring-gray-600 focus:border-gray-600" />
+            <button type="submit" className="bg-black text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition font-medium">Cari</button>
           </div>
         </form>
 
@@ -73,16 +73,16 @@ export default function Search() {
                       {post.featured_image ? (
                         <img src={post.featured_image} alt={post.title} className="w-full h-48 md:h-full object-cover" />
                       ) : (
-                        <div className="w-full h-48 md:h-full bg-gradient-to-br from-red-500 to-red-700" />
+                        <div className="w-full h-48 md:h-full bg-gradient-to-br from-gray-600 to-black" />
                       )}
                     </div>
                     <div className="flex-1 p-6">
                       <div className="flex items-center text-sm text-gray-500 mb-2">
-                        <span className="px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded">{post.category_name}</span>
+                        <span className="px-3 py-1 bg-gray-100 text-black text-xs font-medium rounded">{post.category_name}</span>
                         <span className="mx-2">•</span>
                         <span>{new Date(post.published_at).toLocaleDateString('id-ID')}</span>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-red-700 transition">{post.title}</h3>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 hover:text-black transition">{post.title}</h3>
                       <p className="text-gray-600 line-clamp-2">{post.excerpt}</p>
                     </div>
                   </Link>

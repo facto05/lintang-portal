@@ -1,0 +1,22 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=change-this-to-a-real-secret
+      - PORT=3001
+    volumes:
+      - db-data:/app/server/data
+      - uploads:/app/server/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db-data:
+  uploads:

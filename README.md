@@ -1,58 +1,100 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LINTANG Portal — Kota Tangerang
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Portal berita resmi Lembaga Investigasi Negara (LINTANG) Kota Tangerang.
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Client:** React 19, Vite, Tailwind CSS 4, React Router
+- **Server:** Node.js, Express, SQLite (sql.js), JWT
+- **Auth:** bcrypt + JSON Web Token
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Struktur
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+new_project/
+├── client/          Frontend SPA
+│   └── src/
+│       ├── pages/public/  Home, PostDetail, CategoryArchive, Search, Login
+│       ├── layouts/       PublicLayout, AdminLayout
+│       ├── context/       AuthContext (login/logout/me)
+│       └── api.js         Axios instance + JWT interceptor
+├── server/          Express API
+│   └── src/
+│       ├── routes/        auth, posts, categories, pages, media, tags, users
+│       ├── controllers/   route handlers
+│       ├── middleware/     JWT + role gates
+│       ├── models/        database access
+│       └── utils/         database.js (sql.js + DDL), middleware.js
+├── api/             (legacy)
+└── package.json     workspaces: [client, server]
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## API Endpoints
 
-## Contributing
+| Method | Endpoint | Deskripsi |
+|--------|----------|-----------|
+| GET | `/api/health` | Health check |
+| POST | `/api/auth/login` | Login → JWT |
+| GET | `/api/auth/me` | Current user |
+| GET | `/api/posts` | Published posts (paginated, filter by category/search) |
+| GET | `/api/posts/:slug` | Single post + related |
+| GET | `/api/categories` | All categories + post count |
+| GET | `/api/categories/:slug` | Category + paginated posts |
+| GET | `/api/pages` | Active static pages |
+| GET | `/api/pages/:slug` | Single page |
+| GET | `/api/tags` | (stub) |
+| GET | `/api/media` | (stub) |
+| GET | `/api/users` | (stub) |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Database Schema
 
-## Code of Conduct
+- **users** — name, email, password (bcrypt), role (admin/editor/author), department, is_active
+- **categories** — name, slug, type, description, is_featured
+- **tags** — name, slug, tag_type (topic/location/person/organization/event)
+- **posts** — title, slug, excerpt, content (HTML), featured_image, author_id, category_id, status (draft/published/archived), priority, views, published_at
+- **post_tag** — pivot post_id ↔ tag_id
+- **media** — filename, original_name, mime_type, size, path
+- **pages** — title, slug, content, page_type, meta fields, is_active
+- **logs** — user_id, action, model_type, model_id, old_values, new_values, ip_address, user_agent
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Frontend Routes
 
-## Security Vulnerabilities
+| Route | Halaman |
+|-------|---------|
+| `/` | Home — featured post, latest, popular, kategori |
+| `/posts/:slug` | Detail artikel + related posts |
+| `/categories/:slug` | Arsip kategori |
+| `/search` | Pencarian |
+| `/:slug` | Halaman statis (profil, kontak, FAQ, dll) |
+| `/login` | Login admin |
+| `/admin/*` | Admin dashboard (dilindungi auth) |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Instalasi & Setup
 
-## License
+```bash
+# Install dependencies
+npm install
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Seed database
+npm -w server run seed
+
+# Development (client + server concurrently)
+npm run dev
+```
+
+Server berjalan di `http://localhost:3001`, client di `http://localhost:5173`.
+
+## Default Credentials
+
+- **Admin:** admin@lintang.tangerangkota.go.id / password
+- **Editor:** editor@lintang.tangerangkota.go.id / password
+
+## Fitur
+
+- Publikasi post tanpa approval (draft → published → archived)
+- Audit trail semua perubahan (create, update, delete)
+- Role-based access: Admin (full), Editor (tambah/edit/publish + upload media), Author (tambah/edit/publish)
+- Pagination: 10 per halaman (admin), 12 per halaman (publik)
+- Featured image via URL
+- Upload media max 10MB
+- Responsive design
