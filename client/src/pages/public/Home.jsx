@@ -17,9 +17,9 @@ export default function Home() {
         setPosts(res.data.posts.slice(1));
       }
       setTotalPages(res.data.totalPages);
-    });
-    api.get('/posts?limit=5&sort=views').then(res => setPopular(res.data.posts));
-    api.get('/categories').then(res => setCategories(res.data));
+    }).catch(() => {});
+    api.get('/posts?limit=5&sort=views').then(res => setPopular(res.data.posts)).catch(() => {});
+    api.get('/categories').then(res => setCategories(res.data)).catch(() => {});
   }, []);
 
   useEffect(() => {
