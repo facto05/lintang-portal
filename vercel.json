@@ -1,6 +1,6 @@
 {
   "installCommand": "rm -f package-lock.json && npm install --force",
-  "buildCommand": "npx vite build",
-  "outputDirectory": "dist",
+  "buildCommand": "npm -w client run build",
+  "outputDirectory": "client/dist",
   "rewrites": [{ "source": "/((?!assets/).*)", "destination": "/index.html" }]
 }
